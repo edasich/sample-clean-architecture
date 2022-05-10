@@ -1,0 +1,4 @@
+dependencies {
+    implementation(Dependencies.androidXConstraintLayout)
+    implementation(Dependencies.androidXMaterialDesign)
+}

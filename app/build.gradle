@@ -1,0 +1,65 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply from: "$rootProject.projectDir/android-core.gradle"
+apply from: "$rootProject.projectDir/android-hilt.gradle"
+apply from: "$rootProject.projectDir/android-navigation.gradle"
+apply from: "$rootProject.projectDir/android-ui.gradle"
+apply from: "$rootProject.projectDir/android-retrofit.gradle"
+apply from: "$rootProject.projectDir/android-room.gradle"
+apply from: "$rootProject.projectDir/android-test-unit.gradle"
+apply from: "$rootProject.projectDir/android-test-instrument.gradle"
+
+android {
+    compileSdkVersion 31
+    buildToolsVersion "30.0.3"
+    defaultConfig {
+        applicationId "com.github.edasich.trip"
+        versionCode 1
+        versionName "0.1.0"
+        minSdkVersion 21
+        targetSdkVersion 31
+        multiDexEnabled true
+        consumerProguardFiles "consumer-rules.pro"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix '.dev'
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    buildFeatures {
+        dataBinding true
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+    packagingOptions {
+        // https://github.com/kotlin/kotlinx.coroutines/blob/master/README.md#using-in-your-projects
+        exclude "DebugProbesKt.bin"
+    }
+    compileOptions {
+        // sets Java compatibility to Java 8
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+        // flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled true
+    }
+    lintOptions {
+        abortOnError true
+        disable 'TypographyFractions', 'TypographyQuotes'
+    }
+}
+
+dependencies {
+
+}

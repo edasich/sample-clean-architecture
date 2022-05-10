@@ -1,0 +1,13 @@
+dependencies {
+    coreLibraryDesugaring(Dependencies.androidDesugar)
+    implementation(Dependencies.kotlinStdLibDependency)
+    implementation(Dependencies.kotlinCoroutineCoreDependency)
+    implementation(Dependencies.kotlinCoroutineAndroidDependency)
+    implementation(Dependencies.androidXCore)
+    implementation(Dependencies.androidXAppCompat)
+    implementation(Dependencies.androidXLegacySupportV4)
+    implementation(Dependencies.androidXActivity)
+    implementation(Dependencies.androidXFragment)
+    // Testing Fragments in Isolation
+    debugImplementation(Dependencies.androidXFragmentTest)
+}

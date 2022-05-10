@@ -1,0 +1,13 @@
+dependencies {
+    androidTestImplementation(Dependencies.androidXTestCoreDependency)
+    androidTestImplementation(Dependencies.androidXTestRunnerDependency)
+    androidTestImplementation(Dependencies.androidXTestRulesDependency)
+    androidTestImplementation(Dependencies.androidXTestExtJunitDependency)
+    androidTestImplementation(Dependencies.androidXTestEspressoCoreDependency)
+    androidTestImplementation(Dependencies.androidXTestEspressoContribDependency)
+    androidTestImplementation(Dependencies.androidXTestEspressoIntentsDependency)
+    androidTestImplementation(Dependencies.androidXTestEspressoAccessibilityDependency)
+    androidTestImplementation(Dependencies.androidXTestEspressoWebDependency)
+    androidTestImplementation(Dependencies.androidXTestEspressoIdlingConcurrentDependency)
+    androidTestImplementation(Dependencies.androidXTestEspressoIdlingResourceDependency)
+}

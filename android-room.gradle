@@ -1,0 +1,8 @@
+apply plugin: 'kotlin-kapt'
+
+dependencies {
+    implementation(Dependencies.roomDependency)
+    kapt(Dependencies.roomCompilerDependency)
+    implementation(Dependencies.roomKtxDependency)
+    testImplementation(Dependencies.roomTestDependency)
+}

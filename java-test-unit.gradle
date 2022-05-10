@@ -1,0 +1,8 @@
+dependencies {
+    testImplementation(Dependencies.junitDependency)
+    testImplementation(Dependencies.hamcrestDependency)
+    testImplementation(Dependencies.mockitoDependency)
+    testImplementation(Dependencies.mockitoInlineDependency)
+    testImplementation(Dependencies.kotlinCoroutineTestDependency)
+    testImplementation(Dependencies.mockKDependency)
+}

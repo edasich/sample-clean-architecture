@@ -1,0 +1,15 @@
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
+dependencies {
+    implementation(Dependencies.hiltDependency)
+    kapt(Dependencies.hiltCompilerDependency)
+    implementation(Dependencies.hiltWorkManagerDependency)
+    kapt(Dependencies.hiltCompilerWorkManagerDependency)
+}
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes true
+}
+

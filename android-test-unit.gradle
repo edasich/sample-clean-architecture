@@ -1,0 +1,17 @@
+apply from: "$rootProject.projectDir/java-test-unit.gradle"
+
+android{
+    testOptions{
+        unitTests{
+            includeAndroidResources = true
+        }
+    }
+}
+
+dependencies {
+    testImplementation(Dependencies.robolectricDependency)
+    testImplementation(Dependencies.androidXTestCoreDependency)
+    testImplementation(Dependencies.androidXTestRunnerDependency)
+    testImplementation(Dependencies.androidXTestRulesDependency)
+    testImplementation(Dependencies.androidXTestExtJunitDependency)
+}

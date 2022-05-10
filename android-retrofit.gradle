@@ -1,0 +1,7 @@
+dependencies {
+    implementation(Dependencies.retrofitDependency)
+    implementation(Dependencies.retrofitConverterGsonDependency)
+    implementation(Dependencies.okHttpDependency)
+    implementation(Dependencies.loggingInterceptorDependency)
+    testImplementation(Dependencies.mockWebServerDependency)
+}

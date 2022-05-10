@@ -1,0 +1,29 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath(Dependencies.gradleDependency)
+        classpath(Dependencies.kotlinGradlePluginDependency)
+        classpath(Dependencies.hiltGradlePluginDependency)
+        classpath(Dependencies.androidXNavigationSafeArgsGradlePluginDependency)
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven {
+            url ("https://jitpack.io")
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

@@ -1,0 +1,7 @@
+apply plugin: Dependencies.androidXNavigationSafeArgsPlugin
+
+dependencies {
+    implementation(Dependencies.androidXNavigationFragment)
+    implementation(Dependencies.androidXNavigationUi)
+    implementation(Dependencies.androidXNavigationTest)
+}
