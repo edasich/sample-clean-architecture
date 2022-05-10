@@ -16,13 +16,23 @@ class EitherApiExecutorImpl @Inject constructor(
     private val jsonParser: JsonParser
 ) : EitherApiExecutor {
 
-    override suspend fun <R> execute(
+    override suspend fun <R> executeWithPayload(
         requestToCall: suspend () -> Response<R>
     ): Either<RemoteError, R> {
+        return executeWithResponse(
+            requestToCall = requestToCall
+        ).map {
+            it.body()!!
+        }
+    }
+
+    override suspend fun <R> executeWithResponse(
+        requestToCall: suspend () -> Response<R>
+    ): Either<RemoteError, Response<R>> {
         return try {
             val serverResponse = requestToCall.invoke()
             if (serverResponse.isSuccessful) {
-                return Either.Right(value = serverResponse.body()!!)
+                return Either.Right(value = serverResponse)
             } else {
                 val errorBody = serverResponse.errorBody() ?: return Either.Left(
                     value = RemoteError.ServerError(

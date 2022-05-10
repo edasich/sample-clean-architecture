@@ -5,8 +5,12 @@ import retrofit2.Response
 
 interface EitherApiExecutor {
 
-    suspend fun <R> execute(
+    suspend fun <R> executeWithPayload(
         requestToCall: suspend () -> Response<R>,
     ): Either<RemoteError, R>
+
+    suspend fun <R> executeWithResponse(
+        requestToCall: suspend () -> Response<R>,
+    ): Either<RemoteError, Response<R>>
 
 }
