@@ -1,0 +1,21 @@
+apply from: "$rootProject.projectDir/android-library.gradle"
+apply from: "$rootProject.projectDir/android-core.gradle"
+apply from: "$rootProject.projectDir/android-retrofit.gradle"
+apply from: "$rootProject.projectDir/android-room.gradle"
+apply from: "$rootProject.projectDir/android-hilt.gradle"
+apply from: "$rootProject.projectDir/android-test-unit.gradle"
+
+android {
+    buildTypes {
+        debug {
+            buildConfigField "String", "SERVER_URL", SERVER_URL_DEBUG
+        }
+        release {
+            buildConfigField "String", "SERVER_URL", SERVER_URL_RELEASE
+        }
+    }
+}
+
+dependencies {
+    api(Dependencies.javaxInjectDependency)
+}
