@@ -1,0 +1,5 @@
+apply from: "$rootProject.projectDir/java-library.gradle"
+
+dependencies {
+    implementation(Dependencies.arrowCoreDependency)
+}
