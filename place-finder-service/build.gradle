@@ -1,0 +1,5 @@
+apply from: "$rootProject.projectDir/java-library.gradle"
+
+dependencies {
+    api project(":place-finder-domain")
+}
