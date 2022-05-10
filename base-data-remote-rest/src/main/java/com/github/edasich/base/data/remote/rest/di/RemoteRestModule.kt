@@ -79,6 +79,7 @@ abstract class RemoteRestModule {
             return builder.build()
         }
 
+        @AuthorizedRetrofit
         @Singleton
         @Provides
         fun provideAuthorizedRetrofit(
