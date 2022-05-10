@@ -1,0 +1,11 @@
+apply from: "$rootProject.projectDir/android-library.gradle"
+apply from: "$rootProject.projectDir/android-core.gradle"
+apply from: "$rootProject.projectDir/android-hilt.gradle"
+apply from: "$rootProject.projectDir/android-room.gradle"
+apply from: "$rootProject.projectDir/android-retrofit.gradle"
+apply from: "$rootProject.projectDir/android-test-unit.gradle"
+
+dependencies {
+    implementation project(':place-finder-domain')
+    implementation project(':place-finder-service-internal')
+}
