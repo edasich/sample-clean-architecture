@@ -5,8 +5,8 @@ apply from: "$rootProject.projectDir/android-hilt.gradle"
 apply from: "$rootProject.projectDir/android-test-unit.gradle"
 
 dependencies {
-    implementation project(':base-service')
-    implementation project(':base-data')
+    api project(':base-service')
+    api project(':base-data')
     implementation project(':base-data-remote-parser-gson')
     implementation(Dependencies.javaxInjectDependency)
     implementation(Dependencies.arrowCoreDependency)
