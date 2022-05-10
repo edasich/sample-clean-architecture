@@ -1,0 +1,10 @@
+apply from: "$rootProject.projectDir/android-library.gradle"
+apply from: "$rootProject.projectDir/android-core.gradle"
+apply from: "$rootProject.projectDir/android-hilt.gradle"
+apply from: "$rootProject.projectDir/android-navigation.gradle"
+apply from: "$rootProject.projectDir/android-ui.gradle"
+apply from: "$rootProject.projectDir/android-test-unit.gradle"
+apply from: "$rootProject.projectDir/android-test-instrument.gradle"
+
+dependencies {
+}
