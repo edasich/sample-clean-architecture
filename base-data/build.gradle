@@ -17,5 +17,6 @@ android {
 }
 
 dependencies {
-    api(Dependencies.javaxInjectDependency)
+    implementation(Dependencies.javaxInjectDependency)
+    implementation(Dependencies.arrowCoreDependency)
 }
