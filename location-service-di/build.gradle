@@ -1,0 +1,8 @@
+apply from: "$rootProject.projectDir/android-library.gradle"
+apply from: "$rootProject.projectDir/android-core.gradle"
+apply from: "$rootProject.projectDir/android-hilt.gradle"
+
+dependencies {
+    implementation project(':location-service')
+    implementation project(':location-service-internal')
+}
