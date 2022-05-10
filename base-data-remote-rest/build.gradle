@@ -1,0 +1,13 @@
+apply from: "$rootProject.projectDir/android-library.gradle"
+apply from: "$rootProject.projectDir/android-core.gradle"
+apply from: "$rootProject.projectDir/android-retrofit.gradle"
+apply from: "$rootProject.projectDir/android-hilt.gradle"
+apply from: "$rootProject.projectDir/android-test-unit.gradle"
+
+dependencies {
+    implementation project(':base-service')
+    implementation project(':base-data')
+    implementation project(':base-data-remote-parser-gson')
+    implementation(Dependencies.javaxInjectDependency)
+    implementation(Dependencies.arrowCoreDependency)
+}
