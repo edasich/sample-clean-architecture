@@ -1,0 +1,10 @@
+apply from: "$rootProject.projectDir/android-library.gradle"
+apply from: "$rootProject.projectDir/android-core.gradle"
+apply from: "$rootProject.projectDir/android-hilt.gradle"
+apply from: "$rootProject.projectDir/android-test-unit.gradle"
+
+dependencies {
+    implementation project(':location-domain')
+    implementation project(':location-service-internal')
+    implementation (Dependencies.googlePlayServicesLocationDependency)
+}
