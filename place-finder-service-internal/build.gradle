@@ -1,0 +1,7 @@
+apply from: "$rootProject.projectDir/java-library.gradle"
+
+dependencies {
+    implementation project(":place-finder-domain")
+    implementation project(":place-finder-service")
+    implementation project(":location-service")
+}
