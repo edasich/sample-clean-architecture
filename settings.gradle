@@ -1,19 +1,23 @@
 rootProject.name = "trip-advisor"
 include ':app'
+
+include ':authentication-data'
+
+include ':base-ui'
+include ':base-data'
+include ':base-data-remote-rest'
+include ':base-data-remote-parser-gson'
+include ':base-service'
+
 include ':location-device'
 include ':location-domain'
 include ':location-service'
-include ':location-service-di'
 include ':location-service-internal'
+include ':location-service-di'
+
 include ':place-finder-ui'
+include ':place-finder-data'
 include ':place-finder-domain'
 include ':place-finder-service'
 include ':place-finder-service-internal'
-include ':place-finder-data'
-include ':base-data'
-include ':authentication-data'
-include ':base-data-remote-rest'
-include ':base-service'
-include ':base-data-remote-parser-gson'
 include ':place-finder-service-di'
-include ':base-ui'
