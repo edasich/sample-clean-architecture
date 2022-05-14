@@ -20,6 +20,8 @@ sealed class GeneralDataError {
         object Unknown : GeneralRemoteError()
     }
 
-    sealed class GeneralLocalError : GeneralDataError()
+    sealed class GeneralLocalError : GeneralDataError() {
+        object NoMoreData : GeneralDataError()
+    }
 
 }
