@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/graph_place_finder"
+    app:startDestination="@id/nearbyPlacesFragment">
+
+    <fragment
+        android:id="@+id/nearbyPlacesFragment"
+        android:name="com.github.edasich.place.finder.ui.nearby.view.NearbyPlacesFragment"
+        android:label="@string/nearby_places"
+        tools:layout="@layout/fragment_nearby_places" />
+
+    <fragment
+        android:id="@+id/favoriteNearbyPlacesFragment"
+        android:name="com.github.edasich.place.finder.ui.favorit.view.FavoriteNearbyPlacesFragment"
+        android:label="@string/nearby_places_favorite"
+        tools:layout="@layout/fragment_favorite_nearby_places" />
+
+</navigation>

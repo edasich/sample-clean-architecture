@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="text_nearby_places_favorite_empty">No Favorite Added Yet</string>
+    <string name="nearby_places">Nearby Places</string>
+    <string name="nearby_places_favorite">Favorite Places</string>
+</resources>

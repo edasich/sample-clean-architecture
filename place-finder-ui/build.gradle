@@ -7,4 +7,8 @@ apply from: "$rootProject.projectDir/android-test-unit.gradle"
 apply from: "$rootProject.projectDir/android-test-instrument.gradle"
 
 dependencies {
+    implementation project(":base-ui")
+    implementation project(":place-finder-service")
+    implementation(Dependencies.arrowCoreDependency)
+    implementation 'com.mapbox.maps:android:10.5.0'
 }
