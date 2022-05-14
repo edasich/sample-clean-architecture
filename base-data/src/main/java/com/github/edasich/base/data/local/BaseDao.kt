@@ -27,21 +27,21 @@ abstract class BaseDao<T> {
     open suspend fun upsert(entity: T) {
         val id = insert(entity)
         if (id == -1L) {
-            update(entity)
+            update(entity = entity)
         }
     }
 
     @Transaction
     open suspend fun upsert(entities: List<T>) {
-        val insertResult = insert(entities)
+        val insertResult = insert(entities = entities)
         val updateList: MutableList<T> = ArrayList()
         for (i in insertResult.indices) {
             if (insertResult[i] == -1L) {
-                updateList.add(entities[i])
+                updateList.add(element = entities[i])
             }
         }
         if (updateList.isNotEmpty()) {
-            update(updateList)
+            update(entities = updateList)
         }
     }
 
