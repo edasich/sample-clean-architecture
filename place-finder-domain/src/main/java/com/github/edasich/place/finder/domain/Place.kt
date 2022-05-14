@@ -6,3 +6,11 @@ data class Place(
     val address: PlaceAddress,
     val placeFavoriteStatus: PlaceFavoriteStatus
 )
+
+fun Place.makePlaceFavored(): Place {
+    return this.copy(placeFavoriteStatus = PlaceFavoriteStatus.Favored)
+}
+
+fun Place.makePlaceNotFavored(): Place {
+    return this.copy(placeFavoriteStatus = PlaceFavoriteStatus.NotFavored)
+}
