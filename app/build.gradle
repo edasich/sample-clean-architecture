@@ -61,5 +61,24 @@ android {
 }
 
 dependencies {
+    implementation project(':location-domain')
+    implementation project(':location-device')
+    implementation project(':location-service')
+    implementation project(':location-service-di')
+    implementation project(':location-service-internal')
 
+    implementation project(':place-finder-domain')
+    implementation project(':place-finder-data')
+    implementation project(':place-finder-service')
+    implementation project(':place-finder-service-internal')
+    implementation project(':place-finder-service-di')
+    implementation project(':place-finder-ui')
+
+    implementation project(':base-data')
+    implementation project(':authentication-data')
+    implementation project(':base-data-remote-rest')
+    implementation project(':base-service')
+    implementation project(':base-data-remote-parser-gson')
+
+    implementation(Dependencies.googlePlayServicesLocationDependency)
 }

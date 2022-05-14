@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@id/nearbyPlacesFragment"
+        android:icon="@drawable/ic_map"
+        android:title="@string/nearby_places" />
+
+    <item
+        android:id="@id/favoriteNearbyPlacesFragment"
+        android:icon="@drawable/ic_favored"
+        android:title="@string/nearby_places_favorite" />
+
+</menu>

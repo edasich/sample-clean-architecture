@@ -3,6 +3,8 @@ package com.github.edasich.trip.app.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.github.edasich.trip.R
 import com.github.edasich.trip.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,6 +17,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         layout = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        initBottomNavigation()
+    }
+
+    private fun initBottomNavigation() {
+        layout.fragmentContainerView.getFragment<NavHostFragment>()
+            .also {
+                layout.bottomNavigationView.setupWithNavController(navController = it.navController)
+            }
     }
 
 }
