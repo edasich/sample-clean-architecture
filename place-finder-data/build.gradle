@@ -6,6 +6,10 @@ apply from: "$rootProject.projectDir/android-retrofit.gradle"
 apply from: "$rootProject.projectDir/android-test-unit.gradle"
 
 dependencies {
+    implementation project(':base-data-remote-rest')
+    implementation project(':location-domain')
     implementation project(':place-finder-domain')
     implementation project(':place-finder-service-internal')
+    implementation(Dependencies.javaxInjectDependency)
+    implementation(Dependencies.arrowCoreDependency)
 }
