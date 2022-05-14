@@ -4,4 +4,5 @@ dependencies {
     implementation project(":place-finder-domain")
     implementation project(":place-finder-service")
     implementation project(":location-service")
+    implementation(Dependencies.arrowCoreDependency)
 }

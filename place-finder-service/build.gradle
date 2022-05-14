@@ -1,5 +1,8 @@
 apply from: "$rootProject.projectDir/java-library.gradle"
 
 dependencies {
+    api project(":base-service")
     api project(":place-finder-domain")
+    implementation project(":location-domain")
+    implementation(Dependencies.arrowCoreDependency)
 }
