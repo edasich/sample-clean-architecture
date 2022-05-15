@@ -1,16 +1,20 @@
 package com.github.edasich.app.place.finder.data.remote.rest
 
 import com.github.edasich.place.finder.data.remote.rest.PlaceRestService
+import com.github.edasich.place.finder.data.remote.rest.model.NearbyPlacesApiResponse
 import com.github.edasich.test.common.data.remote.createApi
 import com.github.edasich.test.common.data.remote.enqueueResponse
+import com.github.edasich.test.common.data.remote.readJsonFile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import retrofit2.Response
 import java.net.URLEncoder
 
 @Suppress("BlockingMethodInNonBlockingContext")
@@ -87,6 +91,31 @@ class PlaceRestServiceTest {
         MatcherAssert.assertThat(
             actualResult,
             Matchers.`is`(expectedHttpMethod)
+        )
+    }
+
+    @Test
+    fun `the format of the returned object of API Call is correct`() = runTest {
+        //given
+        mockWebServer.enqueueResponse(
+            fileName = JsonResources.RESOURCE_FETCH_NEARBY_PLACES_200,
+            code = 200
+        )
+
+        //when
+        val actualResult: Response<NearbyPlacesApiResponse> = sut.fetchNearbyPlaces(
+            latLng = queryParameters.latLng,
+            radius = queryParameters.radius
+        )
+
+        //then
+        MatcherAssert.assertThat(
+            actualResult.body()?.places,
+            Matchers.notNullValue()
+        )
+        MatcherAssert.assertThat(
+            actualResult.body()?.context,
+            Matchers.notNullValue()
         )
     }
 

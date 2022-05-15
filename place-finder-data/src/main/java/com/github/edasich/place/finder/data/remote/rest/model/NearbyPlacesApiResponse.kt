@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class NearbyPlacesApiResponse(
     @SerializedName(value = "context")
     val context: PlaceContextApiResponse,
-    @SerializedName(value = "results")
+    @SerializedName(value = "5")
     val places: List<PlaceApiResponse>
 ) {
     var nextNearbyPlacesLink: String? = null
