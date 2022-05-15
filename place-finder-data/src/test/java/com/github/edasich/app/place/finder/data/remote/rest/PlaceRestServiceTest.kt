@@ -13,6 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import java.net.URLEncoder
 
+@Suppress("BlockingMethodInNonBlockingContext")
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlaceRestServiceTest {
 
@@ -20,6 +21,7 @@ class PlaceRestServiceTest {
 
     private val mockWebServer = MockWebServer()
     private val queryParameters = QueryParameters()
+    private val expectedHttpMethod = "GET"
 
     data class QueryParameters(
         val latLng: String = URLEncoder.encode("35.000000,51.000000", "UTF8"),
@@ -39,7 +41,6 @@ class PlaceRestServiceTest {
         mockWebServer.shutdown()
     }
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     @Test
     fun `API calls the Route with proper query parameters`() = runTest {
         val expectedResult = getExpectedUri()
@@ -62,6 +63,30 @@ class PlaceRestServiceTest {
         MatcherAssert.assertThat(
             actualResult,
             Matchers.`is`(expectedResult)
+        )
+    }
+
+    @Test
+    fun `the Exact HTTP METHOD must be applied`() = runTest {
+        //given
+        mockWebServer.enqueueResponse(
+            fileName = JsonResources.RESOURCE_FETCH_NEARBY_PLACES_200,
+            code = 200
+        )
+
+        //when
+        sut.fetchNearbyPlaces(
+            latLng = queryParameters.latLng,
+            radius = queryParameters.radius
+        )
+
+        val recordedRequest = mockWebServer.takeRequest()
+        val actualResult = recordedRequest.method
+
+        //then
+        MatcherAssert.assertThat(
+            actualResult,
+            Matchers.`is`(expectedHttpMethod)
         )
     }
 
