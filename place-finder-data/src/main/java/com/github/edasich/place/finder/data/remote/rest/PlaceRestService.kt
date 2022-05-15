@@ -14,7 +14,7 @@ interface PlaceRestService {
 
     @GET(ROUTE_FETCH_NEARBY_PLACES)
     suspend fun fetchNearbyPlaces(
-        @Query(value = "ll") latLng: String,
+        @Query(value = "ll", encoded = true) latLng: String,
         @Query(value = "radius") radius: Int,
     ): Response<NearbyPlacesApiResponse>
 

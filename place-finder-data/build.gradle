@@ -12,4 +12,6 @@ dependencies {
     implementation project(':place-finder-service-internal')
     implementation(Dependencies.javaxInjectDependency)
     implementation(Dependencies.arrowCoreDependency)
+
+    testImplementation project(":test-common-data")
 }
