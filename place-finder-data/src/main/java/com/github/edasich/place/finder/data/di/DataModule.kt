@@ -4,8 +4,8 @@ import android.content.Context
 import com.github.edasich.base.data.remote.rest.di.AuthorizedRetrofit
 import com.github.edasich.place.finder.data.PlaceRepository
 import com.github.edasich.place.finder.data.PlaceRepositoryImpl
-import com.github.edasich.place.finder.data.local.PageLocalDataSource
-import com.github.edasich.place.finder.data.local.PageLocalDataSourceImpl
+import com.github.edasich.place.finder.data.local.PlaceLocalDataSource
+import com.github.edasich.place.finder.data.local.PlaceLocalDataSourceImpl
 import com.github.edasich.place.finder.data.local.dao.PlaceDao
 import com.github.edasich.place.finder.data.local.database.PlaceDatabase
 import com.github.edasich.place.finder.data.mapper.PlaceMapper
@@ -71,9 +71,9 @@ abstract class DataModule {
 
     @Singleton
     @Binds
-    abstract fun bindPageLocalDataSource(
-        impl: PageLocalDataSourceImpl
-    ): PageLocalDataSource
+    abstract fun bindPlaceLocalDataSource(
+        impl: PlaceLocalDataSourceImpl
+    ): PlaceLocalDataSource
 
     @Singleton
     @Binds

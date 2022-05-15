@@ -3,7 +3,7 @@ package com.github.edasich.place.finder.data
 import com.github.edasich.base.service.PagedList
 import com.github.edasich.base.service.toFreshLoadedList
 import com.github.edasich.location.domain.DeviceLocation
-import com.github.edasich.place.finder.data.local.PageLocalDataSource
+import com.github.edasich.place.finder.data.local.PlaceLocalDataSource
 import com.github.edasich.place.finder.data.mapper.PlaceMapper
 import com.github.edasich.place.finder.data.remote.PlaceRemoteDataSource
 import com.github.edasich.place.finder.domain.AllowedDistance
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
-    private val localDataSource: PageLocalDataSource,
+    private val localDataSource: PlaceLocalDataSource,
     private val remoteDataSource: PlaceRemoteDataSource,
     private val placeMapper: PlaceMapper
 ) : PlaceRepository {

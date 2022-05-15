@@ -5,7 +5,7 @@ import com.github.edasich.place.finder.data.local.model.PlaceEntityWithoutFavore
 import com.github.edasich.place.finder.data.local.model.PlaceToSearchParams
 import kotlinx.coroutines.flow.Flow
 
-interface PageLocalDataSource {
+interface PlaceLocalDataSource {
     fun getPlaces(params: PlaceToSearchParams): Flow<List<PlaceEntity>>
     suspend fun getPlace(placeId: String): PlaceEntity?
     suspend fun savePlaces(places: List<PlaceEntityWithoutFavored>)

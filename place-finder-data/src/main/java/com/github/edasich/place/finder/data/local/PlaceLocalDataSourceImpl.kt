@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
-class PageLocalDataSourceImpl @Inject constructor(
+class PlaceLocalDataSourceImpl @Inject constructor(
     private val placeDao: PlaceDao
-) : PageLocalDataSource {
+) : PlaceLocalDataSource {
 
     private val currentNextLink: AtomicReference<String?> = AtomicReference()
 
