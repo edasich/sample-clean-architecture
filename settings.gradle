@@ -21,3 +21,5 @@ include ':place-finder-domain'
 include ':place-finder-service'
 include ':place-finder-service-internal'
 include ':place-finder-service-di'
+
+include ':test-common-data'

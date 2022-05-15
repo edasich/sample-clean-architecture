@@ -1,0 +1,13 @@
+apply from: "$rootProject.projectDir/android-library.gradle"
+apply from: "$rootProject.projectDir/android-retrofit.gradle"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    debugImplementation project(":base-data-remote-rest")
+    debugImplementation(Dependencies.mockWebServerDependency)
+    debugImplementation(Dependencies.arrowCoreDependency)
+}
