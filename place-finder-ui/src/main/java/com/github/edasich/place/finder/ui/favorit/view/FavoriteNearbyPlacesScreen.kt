@@ -7,17 +7,3 @@ sealed class FavoriteNearbyPlacesScreenRequest {
         val place: NearbyPlaceItem
     ) : FavoriteNearbyPlacesScreenRequest()
 }
-
-sealed class FavoriteNearbyPlacesScreenState {
-    data class InvalidateFavoriteNearbyPlaceList(
-        val favoritePlaceList: List<NearbyPlaceItem>,
-    ) : FavoriteNearbyPlacesScreenState()
-}
-
-sealed class FavoriteNearbyPlacesScreenEvent {
-}
-
-data class FavoriteNearbyPlacesScreenUi(
-    val isFavoritePlaceListEmptyHolderVisible: Boolean = true,
-    val favoritePlaceList: List<NearbyPlaceItem> = emptyList(),
-)

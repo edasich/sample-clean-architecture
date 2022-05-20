@@ -1,14 +1,14 @@
 package com.github.edasich.place.finder.ui.favorit.view
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.cachedIn
+import androidx.paging.map
 import com.github.edasich.base.ui.BaseViewModel
 import com.github.edasich.palce.finder.service.AddPlaceToFavorites
-import com.github.edasich.palce.finder.service.GetFavoriteNearbyPlaces
+import com.github.edasich.palce.finder.service.GetPaginatedFavoriteNearbyPlaces
 import com.github.edasich.palce.finder.service.RemovePlaceFromFavorites
 import com.github.edasich.place.finder.domain.PlaceId
 import com.github.edasich.place.finder.ui.nearby.mapper.NearbyPlaceMapper
-import com.github.edasich.place.finder.ui.nearby.model.NearbyPlaceItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -16,23 +16,25 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteNearbyPlacesViewModel @Inject constructor(
-    private val getFavoriteNearbyPlaces: GetFavoriteNearbyPlaces,
+    private val getPaginatedFavoriteNearbyPlaces: GetPaginatedFavoriteNearbyPlaces,
     private val addPlaceToFavorites: AddPlaceToFavorites,
     private val removePlaceFromFavorites: RemovePlaceFromFavorites,
     private val placeMapper: NearbyPlaceMapper
 ) : BaseViewModel<
         FavoriteNearbyPlacesScreenRequest,
-        FavoriteNearbyPlacesScreenState,
-        FavoriteNearbyPlacesScreenEvent,
-        FavoriteNearbyPlacesScreenUi,
+        Unit,
+        Unit,
+        Unit,
         >() {
 
-    override val _state: MutableLiveData<FavoriteNearbyPlacesScreenUi> =
-        MutableLiveData(FavoriteNearbyPlacesScreenUi())
-
-    init {
-        updateFavoriteNearbyPlacesResult()
-    }
+    val favoriteList = getPaginatedFavoriteNearbyPlaces
+        .invoke()
+        .map {
+            it.map {
+                placeMapper.mapToNearbyPlaceItem(place = it)
+            }
+        }
+        .cachedIn(scope = viewModelScope)
 
     override fun processRequest(request: FavoriteNearbyPlacesScreenRequest) {
         when (request) {
@@ -44,15 +46,7 @@ class FavoriteNearbyPlacesViewModel @Inject constructor(
         }
     }
 
-    override fun setState(state: FavoriteNearbyPlacesScreenState) {
-        when (state) {
-            is FavoriteNearbyPlacesScreenState.InvalidateFavoriteNearbyPlaceList -> {
-                _state.value = _state.value!!.copy(
-                    isFavoritePlaceListEmptyHolderVisible = state.favoritePlaceList.isEmpty(),
-                    favoritePlaceList = state.favoritePlaceList
-                )
-            }
-        }
+    override fun setState(state: Unit) {
     }
 
     private fun handleOnFavoritePlaceClicked(
@@ -67,30 +61,6 @@ class FavoriteNearbyPlacesViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun updateFavoriteNearbyPlacesResult() {
-        viewModelScope.launch {
-            getFavoriteNearbyPlaces()
-                .map {
-                    placeMapper.mapToNearbyPlaceItemList(placeList = it)
-                }
-                .collect {
-                    invalidateFavoriteNearbyPlaceList(
-                        favoriteNearbyPlaceItemList = it
-                    )
-                }
-        }
-    }
-
-    private fun invalidateFavoriteNearbyPlaceList(
-        favoriteNearbyPlaceItemList: List<NearbyPlaceItem>
-    ) {
-        setState(
-            state = FavoriteNearbyPlacesScreenState.InvalidateFavoriteNearbyPlaceList(
-                favoritePlaceList = favoriteNearbyPlaceItemList
-            )
-        )
     }
 
 }

@@ -45,10 +45,18 @@ class PlaceRemoteDataSourceImpl @Inject constructor(
     private fun extractNearbyPlacesFromResponseThenApplyNextLinkIfExist(
         response: Response<NearbyPlacesApiResponse>
     ): NearbyPlacesApiResponse {
+
         return response.body()!!.apply {
             val nextLink = response.headers()["link"]
-            nextNearbyPlacesLink = nextLink
+            nextNearbyPlacesLink = extractNextLink(nextLink = nextLink)
         }
+    }
+
+    private fun extractNextLink(nextLink: String?): String? {
+        return nextLink?.substring(
+            startIndex = nextLink.indexOf('<') + 1,
+            endIndex = nextLink.indexOf('>')
+        )
     }
 
 }

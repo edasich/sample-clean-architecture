@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.edasich.base.ui.EventObserver
 import com.github.edasich.base.ui.bitmapFromDrawableRes
 import com.github.edasich.place.finder.ui.R
 import com.github.edasich.place.finder.ui.databinding.FragmentNearbyPlacesBinding
-import com.github.edasich.place.finder.ui.nearby.model.PlaceMarkerView
+import com.github.edasich.place.finder.ui.nearby.model.NearbyPlaceItem
 import com.mapbox.geojson.Point
 import com.mapbox.maps.Style
 import com.mapbox.maps.dsl.cameraOptions
@@ -24,6 +25,8 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions
 import com.mapbox.maps.plugin.annotation.generated.createPointAnnotationManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NearbyPlacesFragment : Fragment() {
@@ -64,11 +67,11 @@ class NearbyPlacesFragment : Fragment() {
                 is NearbyPlacesScreenEvent.ShowPlaceItem -> {
                     (layout.listPlace.layoutManager as LinearLayoutManager).scrollToPosition(it.placePosition)
                 }
-                is NearbyPlacesScreenEvent.ShowPlaceMarkerView -> {
+                is NearbyPlacesScreenEvent.ShowPlaceMarker -> {
                     layout.mapView.getMapboxMap().flyTo(
                         cameraOptions = cameraOptions {
                             center(Point.fromLngLat(it.markerLongitude, it.markerLatitude))
-                            zoom(12.0)
+                            zoom(15.0)
                             pitch(50.0)
                         },
                         animationOptions = mapAnimationOptions {
@@ -81,9 +84,8 @@ class NearbyPlacesFragment : Fragment() {
     }
 
     private fun render(screenUi: NearbyPlacesScreenUi) {
-        nearbyPlaceListAdapter.submitList(screenUi.placeList)
         clearPlaceMarkerViewListFromMap()
-        addPlaceMarkerViewListToMap(placeMarkerViewList = screenUi.placeMarkerViewList)
+        addPlaceMarkerViewListToMap(placeMarkerViewList = screenUi.placeMarkerList)
     }
 
     private fun initMap() {
@@ -114,24 +116,39 @@ class NearbyPlacesFragment : Fragment() {
                     val firstCompletedVisiblePlace =
                         (recyclerView.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
                     viewModel.processRequest(
-                        request = NearbyPlacesScreenRequest.OnPlaceItemViewed(
-                            placePosition = firstCompletedVisiblePlace
+                        request = NearbyPlacesScreenRequest.OnPlaceItemScrolled(
+                            placeList = nearbyPlaceListAdapter.snapshot().items,
+                            placePosition = firstCompletedVisiblePlace,
                         )
                     )
                 }
             }
 
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (!recyclerView.canScrollVertically(1) && dy != 0) {
-                    viewModel.processRequest(
-                        request = NearbyPlacesScreenRequest.OnLoadMore(
-                            totalLoadedItemCount = layoutManager.itemCount
-                        )
-                    )
-                }
-            }
         })
+
+        nearbyPlaceListAdapter
+            .loadStateFlow
+            .distinctUntilChangedBy {
+                nearbyPlaceListAdapter.snapshot().items
+            }
+            .debounce(500)
+            .onEach {
+                val firstCompletedVisiblePlace =
+                    layoutManager.findFirstVisibleItemPosition()
+                viewModel.processRequest(
+                    request = NearbyPlacesScreenRequest.OnPlaceItemScrolled(
+                        placeList = nearbyPlaceListAdapter.snapshot().items,
+                        placePosition = firstCompletedVisiblePlace,
+                    )
+                )
+            }
+            .launchIn(scope = lifecycleScope)
+
+        lifecycleScope.launch {
+            viewModel.placeList.collectLatest {
+                nearbyPlaceListAdapter.submitData(it)
+            }
+        }
     }
 
     private fun clearPlaceMarkerViewListFromMap() {
@@ -139,7 +156,7 @@ class NearbyPlacesFragment : Fragment() {
     }
 
     private fun addPlaceMarkerViewListToMap(
-        placeMarkerViewList: List<PlaceMarkerView>
+        placeMarkerViewList: List<NearbyPlaceItem>
     ) {
         requireContext().bitmapFromDrawableRes(
             context = requireContext(),

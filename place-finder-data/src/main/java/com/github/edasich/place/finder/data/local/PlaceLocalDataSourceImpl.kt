@@ -1,18 +1,19 @@
 package com.github.edasich.place.finder.data.local
 
+import androidx.paging.PagingSource
 import com.github.edasich.place.finder.data.local.dao.PlaceDao
+import com.github.edasich.place.finder.data.local.dao.RemoteKeyDao
 import com.github.edasich.place.finder.data.local.model.PlaceEntity
 import com.github.edasich.place.finder.data.local.model.PlaceEntityWithoutFavored
 import com.github.edasich.place.finder.data.local.model.PlaceToSearchParams
+import com.github.edasich.place.finder.data.local.model.RemoteKey
 import kotlinx.coroutines.flow.Flow
-import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
 class PlaceLocalDataSourceImpl @Inject constructor(
-    private val placeDao: PlaceDao
+    private val placeDao: PlaceDao,
+    private val remoteKeyDao: RemoteKeyDao
 ) : PlaceLocalDataSource {
-
-    private val currentNextLink: AtomicReference<String?> = AtomicReference()
 
     override fun getPlaces(
         params: PlaceToSearchParams
@@ -22,12 +23,21 @@ class PlaceLocalDataSourceImpl @Inject constructor(
             pointNorthX = params.pointNorthX,
             pointEastY = params.pointEastY,
             pointWestY = params.pointWestY,
-            limit = 10,
-            page = 1
         )
     }
 
-    override suspend fun getPlace(placeId: String) : PlaceEntity? {
+    override fun getPaginatedPlaces(
+        params: PlaceToSearchParams
+    ): PagingSource<Int, PlaceEntity> {
+        return placeDao.getPaginatedPlaces(
+            pointSouthX = params.pointSouthX,
+            pointNorthX = params.pointNorthX,
+            pointEastY = params.pointEastY,
+            pointWestY = params.pointWestY,
+        )
+    }
+
+    override suspend fun getPlace(placeId: String): PlaceEntity? {
         return placeDao.getPlace(placeId = placeId)
     }
 
@@ -39,26 +49,20 @@ class PlaceLocalDataSourceImpl @Inject constructor(
         placeDao.upsert(entity = place)
     }
 
-    override fun getFavoritePlaces(): Flow<List<PlaceEntity>> {
+    override fun getPaginatedFavoritePlaces(): PagingSource<Int, PlaceEntity> {
         return placeDao.getFavoritePlaces()
     }
 
-    override suspend fun saveNextNearbyPlacesLink(nextLink: String) {
-        currentNextLink.set(nextLink)
+    override suspend fun saveRemoteKey(remoteKey: RemoteKey) {
+        remoteKeyDao.insertOrReplace(remoteKey)
     }
 
-    override suspend fun getNextNearbyPlacesLink(): String? {
-        return currentNextLink.get()
+    override suspend fun getRemoteKey(query: String): RemoteKey {
+        return remoteKeyDao.remoteKeyByQuery(query)
     }
 
-    override suspend fun getAndDeleteNextNearbyPlacesLink(): String? {
-        val nextLink = getNextNearbyPlacesLink()
-        deleteNextNearbyPlacesLink()
-        return nextLink
-    }
-
-    override suspend fun deleteNextNearbyPlacesLink() {
-        currentNextLink.set(null)
+    override suspend fun deleteRemoteKey(query: String) {
+        remoteKeyDao.deleteByQuery(query)
     }
 
 }

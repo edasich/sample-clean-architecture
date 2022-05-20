@@ -1,5 +1,6 @@
 package com.github.edasich.place.finder.data.local.dao
 
+import androidx.paging.PagingSource
 import androidx.room.*
 import com.github.edasich.base.data.local.BaseDao
 import com.github.edasich.place.finder.data.local.model.PlaceEntity
@@ -13,7 +14,6 @@ abstract class PlaceDao : BaseDao<PlaceEntity>() {
         """
             select * from place 
             where latitude > :pointSouthX and latitude < :pointNorthX and longitude < :pointEastY and longitude > :pointWestY
-            limit :limit offset :page - 1
             """
     )
     abstract fun getPlaces(
@@ -21,9 +21,20 @@ abstract class PlaceDao : BaseDao<PlaceEntity>() {
         pointNorthX: Float,
         pointEastY: Float,
         pointWestY: Float,
-        limit: Int,
-        page: Int,
     ): Flow<List<PlaceEntity>>
+
+    @Query(
+        """
+            select * from place 
+            where latitude > :pointSouthX and latitude < :pointNorthX and longitude < :pointEastY and longitude > :pointWestY
+            """
+    )
+    abstract fun getPaginatedPlaces(
+        pointSouthX: Float,
+        pointNorthX: Float,
+        pointEastY: Float,
+        pointWestY: Float,
+    ): PagingSource<Int, PlaceEntity>
 
     @Query("select * from place where id = :placeId limit 1")
     abstract suspend fun getPlace(placeId: String): PlaceEntity?
@@ -57,7 +68,7 @@ abstract class PlaceDao : BaseDao<PlaceEntity>() {
         }
     }
 
-    @Query("select * from place where favored = 1")
-    abstract fun getFavoritePlaces(): Flow<List<PlaceEntity>>
+    @Query("select * from place where favored = 1 order by name desc")
+    abstract fun getFavoritePlaces(): PagingSource<Int, PlaceEntity>
 
 }

@@ -16,6 +16,11 @@ import dagger.hilt.components.SingletonComponent
 abstract class PlaceFinderServiceModule {
 
     @Binds
+    abstract fun bindGetPaginatedNearbyPlaces(
+        impl: GetPaginatedNearbyPlacesImpl
+    ): GetPaginatedNearbyPlaces
+
+    @Binds
     abstract fun bindGetNearbyPlaces(
         impl: GetNearbyPlacesImpl
     ): GetNearbyPlaces
@@ -51,9 +56,9 @@ abstract class PlaceFinderServiceModule {
     ): RemovePlaceFromFavorites
 
     @Binds
-    abstract fun bindGetFavoriteNearbyPlaces(
-        impl: GetFavoriteNearbyPlacesImpl
-    ): GetFavoriteNearbyPlaces
+    abstract fun bindGetPaginatedFavoriteNearbyPlaces(
+        impl: GetPaginatedFavoriteNearbyPlacesImpl
+    ): GetPaginatedFavoriteNearbyPlaces
 
     @Binds
     abstract fun bindCoreSearchNearbyPlaceStatus(

@@ -5,4 +5,6 @@ dependencies {
     api project(":place-finder-domain")
     implementation project(":location-domain")
     implementation(Dependencies.arrowCoreDependency)
+
+    implementation("androidx.paging:paging-common-ktx:3.1.1")
 }

@@ -2,8 +2,8 @@ package com.github.edasich.place.finder.ui.nearby.view
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.github.edasich.place.finder.ui.R
 import com.github.edasich.place.finder.ui.databinding.ItemPlaceNearbyBinding
@@ -11,7 +11,7 @@ import com.github.edasich.place.finder.ui.nearby.model.NearbyPlaceItem
 
 class NearbyPlaceListAdapter constructor(
     val favoriteClickListener: FavoriteClickListener
-) : ListAdapter<
+) : PagingDataAdapter<
         NearbyPlaceItem, NearbyPlaceListAdapter.NearbyPlaceListViewHolder
         >(ItemDiffCallback) {
 
@@ -28,8 +28,9 @@ class NearbyPlaceListAdapter constructor(
         holder: NearbyPlaceListViewHolder,
         position: Int
     ) {
-        val item = getItem(position)
-        holder.bind(item = item)
+        getItem(position)?.also {
+            holder.bind(item = it)
+        }
     }
 
     inner class NearbyPlaceListViewHolder(

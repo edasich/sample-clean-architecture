@@ -13,5 +13,8 @@ dependencies {
     implementation(Dependencies.javaxInjectDependency)
     implementation(Dependencies.arrowCoreDependency)
 
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+    implementation("androidx.room:room-paging:2.5.0-alpha01")
+
     testImplementation project(":test-common-data")
 }

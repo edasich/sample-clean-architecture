@@ -5,13 +5,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.github.edasich.place.finder.data.local.dao.PlaceDao
+import com.github.edasich.place.finder.data.local.dao.RemoteKeyDao
 import com.github.edasich.place.finder.data.local.model.PlaceEntity
+import com.github.edasich.place.finder.data.local.model.RemoteKey
 
 @Database(
     entities = [
-        PlaceEntity::class
+        PlaceEntity::class,
+        RemoteKey::class
     ],
-    version = 1
+    version = 2
 )
 abstract class PlaceDatabase : RoomDatabase() {
 
@@ -32,5 +35,7 @@ abstract class PlaceDatabase : RoomDatabase() {
     }
 
     abstract fun placeDao(): PlaceDao
+
+    abstract fun remoteKeyDao(): RemoteKeyDao
 
 }

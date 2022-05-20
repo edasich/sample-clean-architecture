@@ -1,14 +1,10 @@
 package com.github.edasich.place.finder.ui.nearby.view
 
 import com.github.edasich.place.finder.ui.nearby.model.NearbyPlaceItem
-import com.github.edasich.place.finder.ui.nearby.model.PlaceMarkerView
 
 sealed class NearbyPlacesScreenRequest {
-    data class OnLoadMore(
-        val totalLoadedItemCount: Int
-    ) : NearbyPlacesScreenRequest()
-
-    data class OnPlaceItemViewed(
+    data class OnPlaceItemScrolled(
+        val placeList : List<NearbyPlaceItem>,
         val placePosition: Int
     ) : NearbyPlacesScreenRequest()
 
@@ -23,18 +19,8 @@ sealed class NearbyPlacesScreenRequest {
 }
 
 sealed class NearbyPlacesScreenState {
-    data class InvalidateLoading(
-        val isLoading: Boolean
-    ) : NearbyPlacesScreenState()
-
-    data class InvalidateFreshNearbyPlaceList(
-        val placeList: List<NearbyPlaceItem>,
-        val placeMarkerViewList: List<PlaceMarkerView>
-    ) : NearbyPlacesScreenState()
-
-    data class InvalidatePartialNearbyPlaceList(
-        val placeList: List<NearbyPlaceItem>,
-        val placeMarkerViewList: List<PlaceMarkerView>
+    data class InvalidateNearbyPlaceItemList(
+        val placeMarkerViewList: List<NearbyPlaceItem>
     ) : NearbyPlacesScreenState()
 }
 
@@ -43,14 +29,12 @@ sealed class NearbyPlacesScreenEvent {
         val placePosition: Int,
     ) : NearbyPlacesScreenEvent()
 
-    data class ShowPlaceMarkerView(
+    data class ShowPlaceMarker(
         val markerLatitude: Double,
         val markerLongitude: Double
     ) : NearbyPlacesScreenEvent()
 }
 
 data class NearbyPlacesScreenUi(
-    val isLoading: Boolean = false,
-    val placeList: List<NearbyPlaceItem> = emptyList(),
-    val placeMarkerViewList: List<PlaceMarkerView> = emptyList()
+    val placeMarkerList: List<NearbyPlaceItem> = emptyList()
 )

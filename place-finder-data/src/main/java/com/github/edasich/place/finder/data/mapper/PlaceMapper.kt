@@ -6,6 +6,7 @@ import com.github.edasich.place.finder.data.local.model.PlaceEntityWithoutFavore
 import com.github.edasich.place.finder.data.local.model.PlaceToSearchParams
 import com.github.edasich.place.finder.data.remote.rest.model.NearbyPlacesApiRequest
 import com.github.edasich.place.finder.data.remote.rest.model.NearbyPlacesApiResponse
+import com.github.edasich.place.finder.data.remote.rest.model.PlaceApiResponse
 import com.github.edasich.place.finder.domain.AllowedDistance
 import com.github.edasich.place.finder.domain.Place
 
@@ -14,6 +15,14 @@ interface PlaceMapper {
     suspend fun mapToPlaces(
         entities: List<PlaceEntity>
     ): List<Place>
+
+    suspend fun mapToPlace(
+        placeApiResponse: PlaceApiResponse
+    ): Place
+
+    suspend fun mapToPlace(
+        entity: PlaceEntity
+    ): Place
 
     suspend fun mapToPlaceOrNull(
         entity: PlaceEntity?
@@ -27,7 +36,7 @@ interface PlaceMapper {
         apiResponse: NearbyPlacesApiResponse
     ): List<PlaceEntityWithoutFavored>
 
-    suspend fun mapToPlaceToSearchParams(
+    fun mapToPlaceToSearchParams(
         allowedDistance: AllowedDistance,
         deviceLocation: DeviceLocation
     ): PlaceToSearchParams

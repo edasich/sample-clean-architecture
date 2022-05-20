@@ -4,7 +4,6 @@ import com.github.edasich.place.finder.domain.Place
 import com.github.edasich.place.finder.domain.PlaceFavoriteStatus
 import com.github.edasich.place.finder.ui.nearby.mapper.NearbyPlaceMapper
 import com.github.edasich.place.finder.ui.nearby.model.NearbyPlaceItem
-import com.github.edasich.place.finder.ui.nearby.model.PlaceMarkerView
 import javax.inject.Inject
 
 class NearbyPlaceMapperImpl @Inject constructor() : NearbyPlaceMapper {
@@ -13,23 +12,18 @@ class NearbyPlaceMapperImpl @Inject constructor() : NearbyPlaceMapper {
         placeList: List<Place>
     ): List<NearbyPlaceItem> {
         return placeList.map {
+            mapToNearbyPlaceItem(place = it)
+        }
+    }
+
+    override fun mapToNearbyPlaceItem(
+        place: Place
+    ): NearbyPlaceItem {
+        return place.let {
             NearbyPlaceItem(
                 placeId = it.id.id,
                 placeName = it.name.name,
                 placeAddress = it.address.detail.address,
-                latitude = it.address.geocode.latitude.latitude,
-                longitude = it.address.geocode.longitude.longitude,
-                isFavored = mapToFavoredView(favoredStatus = it.placeFavoriteStatus)
-            )
-        }
-    }
-
-    override fun mapToPlaceMarkerViewList(
-        placeList: List<Place>
-    ): List<PlaceMarkerView> {
-        return placeList.map {
-            PlaceMarkerView(
-                placeId = it.id.id,
                 latitude = it.address.geocode.latitude.latitude,
                 longitude = it.address.geocode.longitude.longitude,
                 isFavored = mapToFavoredView(favoredStatus = it.placeFavoriteStatus)

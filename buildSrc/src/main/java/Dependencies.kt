@@ -46,7 +46,7 @@ object Dependencies {
     val androidXNavigationTest = "androidx.navigation:navigation-testing:$navigationVersion"
 
     /* Android X - Room */
-    private val roomVersion = "2.4.0-rc01"
+    private val roomVersion = "2.4.2"
     val roomDependency = "androidx.room:room-runtime:$roomVersion"
     val roomCompilerDependency = "androidx.room:room-compiler:$roomVersion"
     val roomKtxDependency = "androidx.room:room-ktx:$roomVersion"

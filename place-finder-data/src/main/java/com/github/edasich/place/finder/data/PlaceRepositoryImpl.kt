@@ -1,17 +1,16 @@
 package com.github.edasich.place.finder.data
 
-import com.github.edasich.base.service.PagedList
-import com.github.edasich.base.service.toFreshLoadedList
+import androidx.paging.*
 import com.github.edasich.location.domain.DeviceLocation
 import com.github.edasich.place.finder.data.local.PlaceLocalDataSource
 import com.github.edasich.place.finder.data.mapper.PlaceMapper
+import com.github.edasich.place.finder.data.paged.NearbyPlaceRemoteMediator
 import com.github.edasich.place.finder.data.remote.PlaceRemoteDataSource
 import com.github.edasich.place.finder.domain.AllowedDistance
 import com.github.edasich.place.finder.domain.Place
 import com.github.edasich.place.finder.domain.PlaceId
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
@@ -20,31 +19,53 @@ class PlaceRepositoryImpl @Inject constructor(
     private val placeMapper: PlaceMapper
 ) : PlaceRepository {
 
-    override suspend fun getNearbyPlaces(
+    override fun getNearbyPlaces(
         allowedDistance: AllowedDistance,
         currentDeviceLocation: DeviceLocation
-    ): Flow<PagedList<Place>> {
-        val searchParams = placeMapper
+    ): Flow<List<Place>> {
+        val localQueryParams = placeMapper
             .mapToPlaceToSearchParams(
                 allowedDistance = allowedDistance,
                 deviceLocation = currentDeviceLocation
             )
-        return localDataSource
-            .getPlaces(
-                params = searchParams
+        return localDataSource.getPlaces(
+            params = localQueryParams
+        ).map {
+            placeMapper.mapToPlaces(entities = it)
+        }
+    }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun getPaginatedNearbyPlaces(
+        allowedDistance: AllowedDistance,
+        currentDeviceLocation: DeviceLocation
+    ): Flow<PagingData<Place>> {
+        val localQueryParams = placeMapper
+            .mapToPlaceToSearchParams(
+                allowedDistance = allowedDistance,
+                deviceLocation = currentDeviceLocation
             )
+        val remoteQueryParams =
+            "${currentDeviceLocation.latitude.latitude},${currentDeviceLocation.longitude.longitude}"
+        val pagingConfig = PagingConfig(
+            pageSize = 30,
+            enablePlaceholders = false
+        )
+
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = { localDataSource.getPaginatedPlaces(params = localQueryParams) },
+            remoteMediator = NearbyPlaceRemoteMediator(
+                localDataSource = localDataSource,
+                remoteDataSource = remoteDataSource,
+                mapper = placeMapper,
+                query = remoteQueryParams
+            )
+        )
+            .flow
             .map {
-                placeMapper.mapToPlaces(entities = it)
-            }
-            .map {
-                it.toFreshLoadedList()
-            }
-            .onEach {
-                if (it.items.isEmpty()) {
-                    freshFetch(
-                        allowedDistance = allowedDistance,
-                        currentDeviceLocation = currentDeviceLocation
-                    )
+                it.map {
+                    placeMapper.mapToPlace(entity = it)
                 }
             }
     }
@@ -65,30 +86,20 @@ class PlaceRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getFavoriteNearbyPlaces(): Flow<List<Place>> {
-        return localDataSource
-            .getFavoritePlaces()
+    override fun getPaginatedFavoriteNearbyPlaces(): Flow<PagingData<Place>> {
+        val pagingConfig = PagingConfig(
+            pageSize = 30,
+            enablePlaceholders = false
+        )
+        return Pager(
+            config = pagingConfig,
+            pagingSourceFactory = { localDataSource.getPaginatedFavoritePlaces() }
+        )
+            .flow
             .map {
-                placeMapper.mapToPlaces(entities = it)
-            }
-    }
-
-    private suspend fun freshFetch(
-        allowedDistance: AllowedDistance,
-        currentDeviceLocation: DeviceLocation
-    ) {
-        remoteDataSource
-            .fetchNearbyPlaces(
-                apiRequest = placeMapper.mapToNearbyPlacesApiRequest(
-                    allowedDistance = allowedDistance,
-                    currentDeviceLocation = currentDeviceLocation
-                )
-            )
-            .map {
-                placeMapper.mapToPlaceEntities(apiResponse = it)
-            }
-            .tap {
-                localDataSource.savePlaces(places = it)
+                it.map {
+                    placeMapper.mapToPlace(entity = it)
+                }
             }
     }
 

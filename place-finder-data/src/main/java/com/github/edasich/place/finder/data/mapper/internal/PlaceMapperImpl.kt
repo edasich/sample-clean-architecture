@@ -8,6 +8,7 @@ import com.github.edasich.place.finder.data.local.model.PlaceToSearchParams
 import com.github.edasich.place.finder.data.mapper.PlaceMapper
 import com.github.edasich.place.finder.data.remote.rest.model.NearbyPlacesApiRequest
 import com.github.edasich.place.finder.data.remote.rest.model.NearbyPlacesApiResponse
+import com.github.edasich.place.finder.data.remote.rest.model.PlaceApiResponse
 import com.github.edasich.place.finder.domain.*
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -32,8 +33,29 @@ class PlaceMapperImpl @Inject constructor(
         }
     }
 
-    override suspend fun mapToPlaceOrNull(entity: PlaceEntity?): Place? {
-        return entity?.let {
+    override suspend fun mapToPlace(
+        placeApiResponse: PlaceApiResponse
+    ): Place {
+        return placeApiResponse.let {
+            Place(
+                id = PlaceId(id = it.id),
+                name = PlaceName(name = it.name),
+                address = PlaceAddress(
+                    geocode = PlaceGeocode(
+                        latitude = PlaceLatitude(latitude = it.geocode.main.latitude),
+                        longitude = PlaceLongitude(longitude = it.geocode.main.longitude)
+                    ),
+                    detail = PlaceAddressDetail(
+                        address = it.location.formattedAddress
+                    )
+                ),
+                placeFavoriteStatus = PlaceFavoriteStatus.NotFavored
+            )
+        }
+    }
+
+    override suspend fun mapToPlace(entity: PlaceEntity): Place {
+        return entity.let {
             Place(
                 id = PlaceId(id = it.id),
                 name = PlaceName(name = it.name),
@@ -52,6 +74,12 @@ class PlaceMapperImpl @Inject constructor(
                     PlaceFavoriteStatus.NotFavored
                 }
             )
+        }
+    }
+
+    override suspend fun mapToPlaceOrNull(entity: PlaceEntity?): Place? {
+        return entity?.let {
+            mapToPlace(entity = it)
         }
     }
 
@@ -89,28 +117,26 @@ class PlaceMapperImpl @Inject constructor(
         }
     }
 
-    override suspend fun mapToPlaceToSearchParams(
+    override fun mapToPlaceToSearchParams(
         allowedDistance: AllowedDistance,
         deviceLocation: DeviceLocation
     ): PlaceToSearchParams {
-        return withContext(context = coroutineContext) {
-            val pointCenter = PointF(
-                deviceLocation.latitude.latitude.toFloat(),
-                deviceLocation.longitude.longitude.toFloat()
-            )
-            val distance = allowedDistance.distanceInMeter
-            val pointNorth = calculateDerivedPosition(pointCenter, distance * 1.1, 0.0)
-            val pointEast = calculateDerivedPosition(pointCenter, distance * 1.1, 90.0)
-            val pointSouth = calculateDerivedPosition(pointCenter, distance * 1.1, 180.0)
-            val pointWest = calculateDerivedPosition(pointCenter, distance * 1.1, 270.0)
+        val pointCenter = PointF(
+            deviceLocation.latitude.latitude.toFloat(),
+            deviceLocation.longitude.longitude.toFloat()
+        )
+        val distance = allowedDistance.distanceInMeter
+        val pointNorth = calculateDerivedPosition(pointCenter, distance * 1.1, 0.0)
+        val pointEast = calculateDerivedPosition(pointCenter, distance * 1.1, 90.0)
+        val pointSouth = calculateDerivedPosition(pointCenter, distance * 1.1, 180.0)
+        val pointWest = calculateDerivedPosition(pointCenter, distance * 1.1, 270.0)
 
-            PlaceToSearchParams(
-                pointSouthX = pointSouth.x,
-                pointNorthX = pointNorth.x,
-                pointEastY = pointEast.y,
-                pointWestY = pointWest.y,
-            )
-        }
+        return PlaceToSearchParams(
+            pointSouthX = pointSouth.x,
+            pointNorthX = pointNorth.x,
+            pointEastY = pointEast.y,
+            pointWestY = pointWest.y,
+        )
     }
 
     override suspend fun mapToNearbyPlacesApiRequest(

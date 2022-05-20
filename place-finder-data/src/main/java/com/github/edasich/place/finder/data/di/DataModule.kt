@@ -7,6 +7,7 @@ import com.github.edasich.place.finder.data.PlaceRepositoryImpl
 import com.github.edasich.place.finder.data.local.PlaceLocalDataSource
 import com.github.edasich.place.finder.data.local.PlaceLocalDataSourceImpl
 import com.github.edasich.place.finder.data.local.dao.PlaceDao
+import com.github.edasich.place.finder.data.local.dao.RemoteKeyDao
 import com.github.edasich.place.finder.data.local.database.PlaceDatabase
 import com.github.edasich.place.finder.data.mapper.PlaceMapper
 import com.github.edasich.place.finder.data.mapper.internal.PlaceMapperImpl
@@ -44,6 +45,14 @@ abstract class DataModule {
             placeDatabase: PlaceDatabase
         ): PlaceDao {
             return placeDatabase.placeDao()
+        }
+
+        @Singleton
+        @Provides
+        fun provideRemoteKeyDao(
+            placeDatabase: PlaceDatabase
+        ): RemoteKeyDao {
+            return placeDatabase.remoteKeyDao()
         }
 
         @Singleton

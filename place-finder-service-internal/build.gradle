@@ -5,4 +5,5 @@ dependencies {
     implementation project(":place-finder-service")
     implementation project(":location-service")
     implementation(Dependencies.arrowCoreDependency)
+    implementation("androidx.paging:paging-common-ktx:3.1.1")
 }
