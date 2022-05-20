@@ -48,8 +48,9 @@ class PlaceRepositoryImpl @Inject constructor(
         val remoteQueryParams =
             "${currentDeviceLocation.latitude.latitude},${currentDeviceLocation.longitude.longitude}"
         val pagingConfig = PagingConfig(
-            pageSize = 30,
-            enablePlaceholders = false
+            pageSize = 5,
+            enablePlaceholders = true,
+            initialLoadSize = 5,
         )
 
         return Pager(

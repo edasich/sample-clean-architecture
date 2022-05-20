@@ -4,7 +4,6 @@ import com.github.edasich.place.finder.ui.nearby.model.NearbyPlaceItem
 
 sealed class NearbyPlacesScreenRequest {
     data class OnPlaceItemScrolled(
-        val placeList : List<NearbyPlaceItem>,
         val placePosition: Int
     ) : NearbyPlacesScreenRequest()
 
@@ -18,12 +17,6 @@ sealed class NearbyPlacesScreenRequest {
     ) : NearbyPlacesScreenRequest()
 }
 
-sealed class NearbyPlacesScreenState {
-    data class InvalidateNearbyPlaceItemList(
-        val placeMarkerViewList: List<NearbyPlaceItem>
-    ) : NearbyPlacesScreenState()
-}
-
 sealed class NearbyPlacesScreenEvent {
     data class ShowPlaceItem(
         val placePosition: Int,
@@ -34,7 +27,3 @@ sealed class NearbyPlacesScreenEvent {
         val markerLongitude: Double
     ) : NearbyPlacesScreenEvent()
 }
-
-data class NearbyPlacesScreenUi(
-    val placeMarkerList: List<NearbyPlaceItem> = emptyList()
-)

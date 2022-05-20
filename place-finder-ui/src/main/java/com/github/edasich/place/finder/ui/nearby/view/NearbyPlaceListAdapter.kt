@@ -1,6 +1,7 @@
 package com.github.edasich.place.finder.ui.nearby.view
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -28,16 +29,21 @@ class NearbyPlaceListAdapter constructor(
         holder: NearbyPlaceListViewHolder,
         position: Int
     ) {
-        getItem(position)?.also {
-            holder.bind(item = it)
-        }
+        holder.bind(item = getItem(position))
     }
 
     inner class NearbyPlaceListViewHolder(
         val layout: ItemPlaceNearbyBinding
     ) : RecyclerView.ViewHolder(layout.root) {
 
-        fun bind(item: NearbyPlaceItem) {
+        fun bind(item: NearbyPlaceItem?) {
+            if (item == null) {
+                layout.progressBarLoading.visibility = View.VISIBLE
+                return
+            }
+
+            layout.progressBarLoading.visibility = View.GONE
+
             layout.textPlaceName.text = item.placeName
             layout.textPlaceAddress.text = item.placeAddress
             if (item.isFavored) {
