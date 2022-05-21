@@ -2,13 +2,14 @@ package com.github.edasich.place.finder.service.internal.core
 
 import com.github.edasich.location.domain.LocationConfig
 import com.github.edasich.location.domain.LocationDistance
+import com.github.edasich.location.domain.LocationInterval
 import com.github.edasich.location.service.StartLocationCollector
 import com.github.edasich.location.service.StopLocationCollector
 import com.github.edasich.place.finder.domain.SearchNearbyPlaceStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onEach
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,6 +44,14 @@ class CoreSearchNearbyPlace @Inject constructor(
     private fun createLocationConfig(): LocationConfig {
         return LocationConfig.Builder()
             .setDistance(distance = LocationDistance(distanceInMeter = 1_000))
+            .setInterval(interval = LocationInterval(intervalInMillis = TimeUnit.MINUTES.toMillis(1)))
+            .setFastestInterval(
+                fastestInterval = LocationInterval(
+                    intervalInMillis = TimeUnit.SECONDS.toMillis(
+                        30
+                    )
+                )
+            )
             .build()
     }
 
