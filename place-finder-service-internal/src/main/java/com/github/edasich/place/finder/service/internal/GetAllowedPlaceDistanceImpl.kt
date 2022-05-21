@@ -6,6 +6,6 @@ import javax.inject.Inject
 
 class GetAllowedPlaceDistanceImpl @Inject constructor() : GetAllowedPlaceDistance {
 
-    override fun invoke(): AllowedDistance = AllowedDistance(distanceInMeter = 500)
+    override fun invoke(): AllowedDistance = AllowedDistance(distanceInMeter = 1000)
 
 }

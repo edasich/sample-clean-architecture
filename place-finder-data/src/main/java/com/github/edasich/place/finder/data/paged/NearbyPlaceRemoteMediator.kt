@@ -1,6 +1,5 @@
 package com.github.edasich.place.finder.data.paged
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -12,14 +11,14 @@ import com.github.edasich.place.finder.data.mapper.PlaceMapper
 import com.github.edasich.place.finder.data.remote.PlaceRemoteDataSource
 import com.github.edasich.place.finder.data.remote.rest.model.NearbyPlacesApiRequest
 import com.github.edasich.place.finder.data.remote.rest.model.NextNearbyPlacesApiRequest
-import com.github.edasich.place.finder.data.remote.rest.model.PlaceApiResponse
 
 @OptIn(ExperimentalPagingApi::class)
 class NearbyPlaceRemoteMediator(
     private val localDataSource: PlaceLocalDataSource,
     private val remoteDataSource: PlaceRemoteDataSource,
     private val mapper: PlaceMapper,
-    private val query: String
+    private val queryLatLng: String,
+    private val queryRadius: Int,
 ) : RemoteMediator<Int, PlaceEntity>() {
 
     val TAG = "mediator"
@@ -36,7 +35,7 @@ class NearbyPlaceRemoteMediator(
             LoadType.REFRESH -> null
             LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
             LoadType.APPEND -> {
-                val remoteKey = localDataSource.getRemoteKey(query = query)
+                val remoteKey = localDataSource.getRemoteKey(query = queryLatLng)
                 if (remoteKey.nextKey == null) {
                     return MediatorResult.Success(endOfPaginationReached = true)
                 }
@@ -46,8 +45,8 @@ class NearbyPlaceRemoteMediator(
 
         val response = if (nextLink == null) {
             val apiRequest = NearbyPlacesApiRequest(
-                latLng = query,
-                radius = 1000
+                latLng = queryLatLng,
+                radius = queryRadius
             )
             remoteDataSource.fetchNearbyPlaces(apiRequest)
         } else {
@@ -63,12 +62,12 @@ class NearbyPlaceRemoteMediator(
             },
             ifRight = {
                 if (loadType == LoadType.REFRESH) {
-                    localDataSource.deleteRemoteKey(query)
+                    localDataSource.deleteRemoteKey(queryLatLng)
                 }
 
                 localDataSource.saveRemoteKey(
                     remoteKey = RemoteKey(
-                        latLng = query,
+                        latLng = queryLatLng,
                         nextKey = it.nextNearbyPlacesLink
                     )
                 )

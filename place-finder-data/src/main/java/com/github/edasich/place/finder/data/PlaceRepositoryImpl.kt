@@ -45,8 +45,9 @@ class PlaceRepositoryImpl @Inject constructor(
                 allowedDistance = allowedDistance,
                 deviceLocation = currentDeviceLocation
             )
-        val remoteQueryParams =
+        val remoteQueryLatLng =
             "${currentDeviceLocation.latitude.latitude},${currentDeviceLocation.longitude.longitude}"
+        val remoteQueryRadius = allowedDistance.distanceInMeter
         val pagingConfig = PagingConfig(
             pageSize = 5,
             enablePlaceholders = true,
@@ -60,7 +61,8 @@ class PlaceRepositoryImpl @Inject constructor(
                 localDataSource = localDataSource,
                 remoteDataSource = remoteDataSource,
                 mapper = placeMapper,
-                query = remoteQueryParams
+                queryLatLng = remoteQueryLatLng,
+                queryRadius = remoteQueryRadius
             )
         )
             .flow
