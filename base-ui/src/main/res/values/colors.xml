@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/P50</color>
+    <color name="colorPrimaryDark">@color/P50</color>
+    <color name="colorPrimarySurface">#FFFFFF</color>
+    <color name="colorPrimaryVariant">@color/P50</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnPrimarySurface">#000000</color>
+
+    <color name="secondaryColor">@color/P40</color>
+    <color name="colorSecondaryVariant">@color/P40</color>
+    <color name="colorOnSecondary">#FFFFFF</color>
+
+    <color name="colorError">#e22a00</color>
+    <color name="colorOnError">#FFFFFF</color>
+
+    <color name="P50">#00235F</color>
+    <color name="P40">#F9BA00</color>
+
+    <color name="N00">#FFFFFF</color>
+    <color name="N10">#F3F6F9</color>
+    <color name="N20">#EEEFF3</color>
+    <color name="N30">#E8EAEF</color>
+    <color name="N40">#DCDFE7</color>
+    <color name="N50">#C7CBD1</color>
+
+</resources>

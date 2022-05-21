@@ -10,7 +10,7 @@ class GetSearchingNearbyPlaceStatusImpl @Inject constructor(
     private val coreSearchNearbyPlaceStatus: CoreSearchNearbyPlaceStatus
 ) : GetSearchingNearbyPlaceStatus {
 
-    override suspend fun invoke(): Flow<SearchNearbyPlaceStatus> {
+    override fun invoke(): Flow<SearchNearbyPlaceStatus> {
         return coreSearchNearbyPlaceStatus.getSearchNearbyPlaceStatus()
     }
 

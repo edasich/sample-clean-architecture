@@ -4,5 +4,5 @@ import com.github.edasich.place.finder.domain.SearchNearbyPlaceStatus
 import kotlinx.coroutines.flow.Flow
 
 interface GetSearchingNearbyPlaceStatus {
-    suspend operator fun invoke(): Flow<SearchNearbyPlaceStatus>
+    operator fun invoke(): Flow<SearchNearbyPlaceStatus>
 }

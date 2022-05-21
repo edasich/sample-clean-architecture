@@ -1,15 +1,22 @@
 package com.github.edasich.place.finder.ui.nearby.view
 
+import android.Manifest
+import android.app.Activity
+import android.app.PendingIntent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.edasich.base.ui.bitmapFromDrawableRes
+import com.github.edasich.base.ui.showProgress
+import com.github.edasich.place.finder.domain.SearchNearbyPlaceStatus
 import com.github.edasich.place.finder.ui.R
 import com.github.edasich.place.finder.ui.databinding.FragmentNearbyPlacesBinding
 import com.github.edasich.place.finder.ui.nearby.model.NearbyPlaceItem
@@ -36,6 +43,38 @@ class NearbyPlacesFragment : Fragment() {
 
     lateinit var layout: FragmentNearbyPlacesBinding
 
+    private val locationPermissionForResult =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            val areLocationPermissionsGranted = it.all { permission ->
+                permission.value
+            }
+            if (areLocationPermissionsGranted) {
+                viewModel.processRequest(
+                    request = NearbyPlacesScreenRequest.OnLocationPermissionsGranted
+                )
+            } else {
+                viewModel.processRequest(
+                    request = NearbyPlacesScreenRequest.OnLocationPermissionsDenied
+                )
+            }
+        }
+
+    private val locationResolutionForResult =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            when (it.resultCode) {
+                Activity.RESULT_OK -> {
+                    viewModel.processRequest(
+                        request = NearbyPlacesScreenRequest.OnLocationAcceptedToBeEnabled
+                    )
+                }
+                Activity.RESULT_CANCELED -> {
+                    viewModel.processRequest(
+                        request = NearbyPlacesScreenRequest.OnLocationDeniedToBeEnabled
+                    )
+                }
+            }
+        }
+
     private val nearbyPlaceListAdapter: NearbyPlaceListAdapter by lazy {
         NearbyPlaceListAdapter {
             viewModel.processRequest(
@@ -60,6 +99,7 @@ class NearbyPlacesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initMap()
         initNearbyPlaceListAdapter()
+        initSearchPlace()
         handleEvents()
     }
 
@@ -114,22 +154,49 @@ class NearbyPlacesFragment : Fragment() {
         }
     }
 
+    private fun initSearchPlace() {
+        layout.btnPlaceSearch.setOnClickListener {
+            viewModel.processRequest(
+                request = NearbyPlacesScreenRequest.OnSearchPlaceClicked
+            )
+        }
+
+        lifecycleScope.launch {
+            viewModel.searchingPlaceFlow.collectLatest {
+                when (it) {
+                    SearchNearbyPlaceStatus.STARTED -> {
+                        layout.btnPlaceSearch.showProgress(
+                            showProgress = true,
+                            iconSource = R.drawable.ic_place_search
+                        )
+                    }
+                    SearchNearbyPlaceStatus.STOPPED -> {
+                        layout.btnPlaceSearch.showProgress(
+                            showProgress = false,
+                            iconSource = R.drawable.ic_place_search
+                        )
+                    }
+                }
+            }
+        }
+    }
+
     private fun handleEvents() {
         viewModel.events.onEach {
             when (it) {
+                NearbyPlacesScreenEvent.AskGrantLocationPermissions -> {
+                    promptLocationPermissions()
+                }
+                is NearbyPlacesScreenEvent.AskEnableLocation -> {
+                    promptEnableLocation(pendingIntent = it.pendingIntent)
+                }
                 is NearbyPlacesScreenEvent.ShowPlaceItem -> {
-                    (layout.listPlace.layoutManager as LinearLayoutManager).scrollToPosition(it.placePosition)
+                    showPlaceItemInList(placePosition = it.placePosition)
                 }
                 is NearbyPlacesScreenEvent.ShowPlaceMarker -> {
-                    layout.mapView.getMapboxMap().flyTo(
-                        cameraOptions = cameraOptions {
-                            center(Point.fromLngLat(it.markerLongitude, it.markerLatitude))
-                            zoom(15.0)
-                            pitch(50.0)
-                        },
-                        animationOptions = mapAnimationOptions {
-                            duration(3000)
-                        }
+                    showPlaceMarkerInMap(
+                        latitude = it.markerLatitude,
+                        longitude = it.markerLongitude
                     )
                 }
             }
@@ -157,6 +224,41 @@ class NearbyPlacesFragment : Fragment() {
                     pointAnnotationManager.create(options = it)
                 }
         }
+    }
+
+    private fun promptLocationPermissions() {
+        locationPermissionForResult.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        )
+    }
+
+    private fun promptEnableLocation(pendingIntent: PendingIntent) {
+        val locationIntentSenderRequest =
+            IntentSenderRequest.Builder(pendingIntent).build()
+        locationResolutionForResult.launch(locationIntentSenderRequest)
+    }
+
+    private fun showPlaceItemInList(placePosition: Int) {
+        (layout.listPlace.layoutManager as LinearLayoutManager).scrollToPosition(placePosition)
+    }
+
+    private fun showPlaceMarkerInMap(
+        latitude: Double,
+        longitude: Double
+    ) {
+        layout.mapView.getMapboxMap().flyTo(
+            cameraOptions = cameraOptions {
+                center(Point.fromLngLat(longitude, latitude))
+                zoom(15.0)
+                pitch(50.0)
+            },
+            animationOptions = mapAnimationOptions {
+                duration(3000)
+            }
+        )
     }
 
 }

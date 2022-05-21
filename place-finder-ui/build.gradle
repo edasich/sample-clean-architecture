@@ -9,8 +9,8 @@ apply from: "$rootProject.projectDir/android-test-instrument.gradle"
 dependencies {
     implementation project(":base-ui")
     implementation project(":place-finder-service")
+    implementation (Dependencies.googlePlayServicesLocationDependency)
     implementation(Dependencies.arrowCoreDependency)
     implementation 'com.mapbox.maps:android:10.5.0'
-
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
 }

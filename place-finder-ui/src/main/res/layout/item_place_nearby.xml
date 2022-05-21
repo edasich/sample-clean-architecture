@@ -61,7 +61,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_favored_not"
-                app:tint="?attr/colorPrimary" />
+                app:tint="?attr/colorSecondary" />
 
             <ProgressBar
                 android:id="@+id/progressBarLoading"
