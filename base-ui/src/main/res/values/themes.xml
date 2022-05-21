@@ -1,11 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="TripAdvisor" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorPrimarySurface">@color/colorPrimarySurface</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
-        <item name="colorOnPrimarySurface">@color/colorOnPrimarySurface</item>
 
         <item name="colorSecondary">@color/secondaryColor</item>
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
@@ -13,7 +10,5 @@
 
         <item name="colorError">@color/colorError</item>
         <item name="colorOnError">@color/colorOnError</item>
-
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
     </style>
 </resources>
