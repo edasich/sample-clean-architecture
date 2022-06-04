@@ -1,4 +1,4 @@
-rootProject.name = "trip-advisor"
+rootProject.name = "trawell"
 include ':app'
 
 include ':authentication-data'

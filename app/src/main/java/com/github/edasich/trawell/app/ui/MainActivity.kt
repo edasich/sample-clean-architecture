@@ -1,12 +1,12 @@
-package com.github.edasich.trip.app.ui
+package com.github.edasich.trawell.app.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.github.edasich.trip.R
-import com.github.edasich.trip.databinding.ActivityMainBinding
+import com.github.edasich.trawell.R
+import com.github.edasich.trawell.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
