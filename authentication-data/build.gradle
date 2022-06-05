@@ -6,14 +6,22 @@ apply from: "$rootProject.projectDir/android-test-unit.gradle"
 android {
     buildTypes {
         debug {
-            buildConfigField "String", "PLACE_API_KEY", PLACE_API_KEY
+            buildConfigField "String", "PLACE_API_KEY", getModuleProperties().getProperty("PLACE_API_KEY")
         }
         release {
-            buildConfigField "String", "PLACE_API_KEY", PLACE_API_KEY
+            buildConfigField "String", "PLACE_API_KEY", getModuleProperties().getProperty("PLACE_API_KEY")
         }
     }
 }
 
 dependencies {
     implementation project(':base-data')
+}
+
+Properties getModuleProperties() {
+    Properties properties = new Properties()
+    if (rootProject.file("local.properties").exists()) {
+        properties.load(rootProject.file("local.properties").newDataInputStream())
+    }
+    return properties
 }
