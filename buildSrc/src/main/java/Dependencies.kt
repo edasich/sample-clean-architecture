@@ -121,6 +121,10 @@ object Dependencies {
     val mapBoxSdkVersion = "9.5.0"
     val mapBoxSdkDependency = "com.mapbox.mapboxsdk:mapbox-android-sdk:${mapBoxSdkVersion}"
 
+    /* Edasich */
+    val dataTestMockWebServerExtDependency = "io.github.edasich.backpack:data-test-mockwebserver-ext:1.0.0"
+    val dataTestResourceDependency = "io.github.edasich.backpack:data-test-resource:1.0.0"
+
     /* Test */
     private val junitVersion = "4.13"
     private val hamcrestVersion = "2.2"

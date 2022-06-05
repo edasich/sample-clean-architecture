@@ -1,20 +1,19 @@
 package com.github.edasich.app.place.finder.data.remote.rest
 
+import com.github.edasich.backpack.data.test.mockwebserver.ext.createRestService
+import com.github.edasich.backpack.data.test.mockwebserver.ext.enqueueResponseFromResourceFile
 import com.github.edasich.place.finder.data.remote.rest.PlaceRestService
 import com.github.edasich.place.finder.data.remote.rest.model.NearbyPlacesApiResponse
-import com.github.edasich.test.common.data.remote.createApi
-import com.github.edasich.test.common.data.remote.enqueueResponse
-import com.github.edasich.test.common.data.remote.readJsonFile
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import retrofit2.Response
+import retrofit2.converter.gson.GsonConverterFactory
 import java.net.URLEncoder
 
 @Suppress("BlockingMethodInNonBlockingContext")
@@ -34,9 +33,9 @@ class PlaceRestServiceTest {
 
     @Before
     fun setUp() {
-        sut = createApi(
-            mockWebServer = mockWebServer,
-            apiClass = PlaceRestService::class.java
+        sut = mockWebServer.createRestService(
+            converterFactory = GsonConverterFactory.create(),
+            serviceClass = PlaceRestService::class.java
         )
     }
 
@@ -49,8 +48,8 @@ class PlaceRestServiceTest {
     fun `API calls the Route with proper query parameters`() = runTest {
         val expectedResult = getExpectedUri()
         //given
-        mockWebServer.enqueueResponse(
-            fileName = JsonResources.RESOURCE_FETCH_NEARBY_PLACES_200,
+        mockWebServer.enqueueResponseFromResourceFile(
+            absoluteFilePath = JsonResources.RESOURCE_FETCH_NEARBY_PLACES_200,
             code = 200
         )
 
@@ -73,8 +72,8 @@ class PlaceRestServiceTest {
     @Test
     fun `the Exact HTTP METHOD must be applied`() = runTest {
         //given
-        mockWebServer.enqueueResponse(
-            fileName = JsonResources.RESOURCE_FETCH_NEARBY_PLACES_200,
+        mockWebServer.enqueueResponseFromResourceFile(
+            absoluteFilePath = JsonResources.RESOURCE_FETCH_NEARBY_PLACES_200,
             code = 200
         )
 
@@ -97,8 +96,8 @@ class PlaceRestServiceTest {
     @Test
     fun `the format of the returned object of API Call is correct`() = runTest {
         //given
-        mockWebServer.enqueueResponse(
-            fileName = JsonResources.RESOURCE_FETCH_NEARBY_PLACES_200,
+        mockWebServer.enqueueResponseFromResourceFile(
+            absoluteFilePath = JsonResources.RESOURCE_FETCH_NEARBY_PLACES_200,
             code = 200
         )
 

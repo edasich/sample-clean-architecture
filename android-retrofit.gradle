@@ -4,4 +4,5 @@ dependencies {
     implementation(Dependencies.okHttpDependency)
     implementation(Dependencies.loggingInterceptorDependency)
     testImplementation(Dependencies.mockWebServerDependency)
+    testImplementation(Dependencies.dataTestMockWebServerExtDependency)
 }
